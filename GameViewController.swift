@@ -32,7 +32,7 @@ class GameViewController: UIViewController {
         /////////////////////////////////////
         
         let sim = ForestFireSimulation()
-        let palette: [Character?] = ["🔥", "🌲", nil, nil, nil, nil, nil, nil]
+        let palette: [Character?] = ["🌳", "🌱", "🔥", "✄", nil, nil, nil, nil]
 		
         /////////////////////////////////////
         // ForestFireSimulation setup end //

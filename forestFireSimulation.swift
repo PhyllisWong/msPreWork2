@@ -12,6 +12,8 @@ public class ForestFireSimulation: Simulation {
 	// instance variable to hold temporary grid
 	var newGrid: [[Character?]] = []
 	var lighteningGrid: [[Character?]] = []
+	var mercyGrid: [[Character?]] = []
+	var jerkGrid: [[Character?]] = []
 	
 	// set up the palette - grid
 	public override func setup() {
@@ -23,21 +25,126 @@ public class ForestFireSimulation: Simulation {
 				// hold randomZeroToOne method in a constant
 				let randomNum = randomZeroToOne()
 				
-				if randomNum <= 0.24 {
-					grid[x][y] = "🌲"
-				} else if (randomNum >= 0.25 && randomNum <= 0.5) {
-					grid[x][y] = "🔥"
+				if randomNum < 0.05 {
+					grid[x][y] = "🌳"
+				} else if (randomNum >= 0.05 && randomNum < 0.10) {
+					grid[x][y] = "🌱"
+				} else if (randomNum >= 0.10 && randomNum < 0.12) {
+					grid[x][y] = "✄"
 				}
 			}
 		}
 	}
 	
 	
-	// ~~~~~~~~~~~~~~~Spawning Trees~~~~~~~~~~~~~~ //
+	
 	public override func update() {
-		 thunderboltAndLightning()
-//		aTinyForest()
+		// thunderboltAndLightning()
+		// aTinyForest()
+		// noMercy()
+		jerkTrees()
 	}
+	
+	func jerkTrees() {
+		jerkGrid = grid
+		
+		for x in 0..<grid.count {
+			for y in 0..<grid[x].count {
+				let cell = grid[x][y]
+				
+				if (cell == nil) {
+					let randomNum = randomZeroToOne()
+					if randomNum <= 0.05 {
+						jerkGrid[x][y] = "🌳"
+					} else if randomNum > 0.05 && randomNum <= 0.07 {
+						jerkGrid[x][y] = "🌱"
+					}
+				} else if (cell == "🌳") {
+					// get coords of neighbors
+					let neighborCoords = getNeighborPositions(x: x, y: y)
+					var jerkCount = 0
+					
+					// iterate thru all the neighbors
+					for neighborCord in neighborCoords {
+						let neighbor = grid[neighborCord.x][neighborCord.y]
+						
+						if (neighbor == "🌱") {
+							jerkCount += 1
+							if (jerkCount >= 4) {
+								jerkGrid[x][y] = nil
+							}
+							
+						} else if (neighbor == "✄") {
+							jerkGrid[x][y] = nil
+						}
+					}
+					
+				} else if (cell == "🌱") {
+					let neighborCoords = getNeighborPositions(x: x, y: y)
+					// iterate thru all the neighbors
+					for neighborCord in neighborCoords {
+						let neighbor = grid[neighborCord.x][neighborCord.y]
+
+						if (neighbor == "🔥") {
+							jerkGrid[x][y] = "🔥"
+						} else if (neighbor == "✄") {
+							jerkGrid[x][y] = "✄"
+						} else if (neighbor == "🌱") {
+							if randomZeroToOne() <= 0.001 {
+								jerkGrid[x][y] = "🔥"
+							}
+
+						}
+					}
+				} else if (cell == "🔥") {
+					jerkGrid[x][y] = nil
+				}
+			}
+		}
+		grid = jerkGrid
+	}
+	
+	func noMercy() {
+		// ~~~~~~~~~~~~~~~Spawning Trees~~~~~~~~~~~~~~ //
+		mercyGrid = grid
+		
+		for x in 0..<grid.count {
+			for y in 0..<grid[x].count {
+				let cell = grid[x][y]
+				
+				// spawn trees at 1% chance
+				if (cell == nil) {
+					if randomZeroToOne() <= 0.01 {
+						mercyGrid[x][y] = "🌲"
+					}
+					// kill trees by fire or cutting
+				} else if (cell == "🌲") {
+					let neighborCoords = getNeighborPositions(x: x, y: y)
+					
+					for neighborCord in neighborCoords {
+						let neighbor = grid[neighborCord.x][neighborCord.y]
+						// ~~~~~~~~~ check for fire ~~~~~~~~ //
+						if (neighbor == "🔥") {
+							mercyGrid[x][y] = "🔥"
+						// ~~~~~~~~~ check for clear cutting ~~~~~~~~ //
+						} else if (neighbor == "✂︎") {
+							mercyGrid[x][y] = nil
+						// ~~~~~~~~~ check for tree, has .01% chance of lightening ~~~~~~~~ //
+						} else if (neighbor == "🌲") {
+							if randomZeroToOne() <= 0.001 {
+								mercyGrid[x][y] = "🔥"
+							}
+						}
+
+					}
+				} else if (cell == "🔥") {
+					mercyGrid[x][y] = nil
+				}
+			}
+		}
+		grid = mercyGrid
+	}
+	
 	
 	func thunderboltAndLightning() {
 		lighteningGrid = grid
