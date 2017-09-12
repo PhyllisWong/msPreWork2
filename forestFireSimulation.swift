@@ -11,6 +11,7 @@ import Foundation
 public class ForestFireSimulation: Simulation {
 	// instance variable to hold temporary grid
 	var newGrid: [[Character?]] = []
+	var lighteningGrid: [[Character?]] = []
 	
 	// set up the palette - grid
 	public override func setup() {
@@ -34,10 +35,50 @@ public class ForestFireSimulation: Simulation {
 	
 	// ~~~~~~~~~~~~~~~Spawning Trees~~~~~~~~~~~~~~ //
 	public override func update() {
-		thunderboltAndLightning()
+		 thunderboltAndLightning()
+//		aTinyForest()
 	}
 	
 	func thunderboltAndLightning() {
+		lighteningGrid = grid
+		
+		for x in 0..<grid.count {
+			for y in 0..<grid[x].count {
+				let cell = grid[x][y]
+				
+				if (cell == nil) {
+					if randomZeroToOne() <= 0.003 {
+						lighteningGrid[x][y] = "🌲"
+					}
+					// check if the cell is a tree
+				} else if (cell == "🌲") {
+					// get coordinates of neighborCells
+					let neighborCoords = getNeighborPositions(x: x, y: y)
+					
+				// ~~~~~ iterate thru each neighbor ~~~~~ //
+					for neighborCord in neighborCoords {
+						let neighbor = grid[neighborCord.x][neighborCord.y]
+						// ~~~~~~~~~ check for fire ~~~~~~~~ //
+						if (neighbor == "🔥") {
+							lighteningGrid[x][y] = "🔥"
+							
+							// if neighbor is a tree .01% chance of becomming fire
+						} else if (neighbor == "🌲") {
+							if randomZeroToOne() <= 0.001 {
+								lighteningGrid[x][y] = "🔥"
+							}
+						}
+					}
+				} else if (cell == "🔥") {
+					lighteningGrid[x][y] = nil
+				}
+				
+			}
+		}
+		grid = lighteningGrid
+	}
+	
+	func aTinyForest() {
 		newGrid = grid
 		
 		for x in 0..<grid.count {
@@ -64,10 +105,6 @@ public class ForestFireSimulation: Simulation {
 			}
 		}
 		grid = newGrid
-
-	}
-	
-	func aTinyForest() {
 		
 	}
 	
@@ -95,7 +132,6 @@ public class ForestFireSimulation: Simulation {
 		return neighbors
 	}
 }
-
 
 
 
