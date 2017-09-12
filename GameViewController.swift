@@ -19,10 +19,10 @@ class GameViewController: UIViewController {
         // GameOfLifeSimulation setup start //
         /////////////////////////////////////
         
-        let filePath = Bundle.main.path(forResource: "map01", ofType: "txt")!
-        let sim = GameOfLifeSimulation(file: filePath)!
-        let palette: [Character?] = ["👾", "😸", nil, nil, nil, nil, nil, nil]
-        
+//        let filePath = Bundle.main.path(forResource: "map01", ofType: "txt")!
+//        let sim = GameOfLifeSimulation(file: filePath)!
+//        let palette: [Character?] = ["👾", "😸", nil, nil, nil, nil, nil, nil]
+		
         /////////////////////////////////////
         // GameOfLifeSimulation setup end //
         ///////////////////////////////////
@@ -31,9 +31,9 @@ class GameViewController: UIViewController {
         // ForestFireSimulation setup start //
         /////////////////////////////////////
         
-//        let sim = ForestFireSimulation()
-//        let palette: [Character?] = ["🔥", "🌲", nil, nil, nil, nil, nil, nil]
-        
+        let sim = ForestFireSimulation()
+        let palette: [Character?] = ["🔥", "🌲", nil, nil, nil, nil, nil, nil]
+		
         /////////////////////////////////////
         // ForestFireSimulation setup end //
         ///////////////////////////////////
