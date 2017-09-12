@@ -38,6 +38,18 @@ public class ForestFireSimulation: Simulation {
 					if randomZeroToOne() < 0.01 {
 						newGrid[x][y] = "🌲"
 					}
+				} else if (cell == "🌲") {
+					// ~~~~~ check for fire ~~~~~~~~//
+					let neighborCoords = getNeighborPositions(x: x, y: y)
+					
+					for neighborCord in neighborCoords {
+						let neighbor = grid[neighborCord.x][neighborCord.y]
+						if neighbor == "🔥" {
+							newGrid[x][y] = "🔥"
+						}
+					}
+				} else if (cell == "🔥") {
+					newGrid[x][y] = nil
 				}
 			}
 		}
