@@ -12,14 +12,20 @@ public class ForestFireSimulation: Simulation {
 	// instance variable to hold temporary grid
 	var newGrid: [[Character?]] = []
 	
+	// set up the palette - grid
 	public override func setup() {
 		
 		grid = [[Character?]](repeating: [Character?](repeating: nil, count: 10), count: 10)
 		
 		for x in 0..<8 {
 			for y in 0..<10 {
-				if randomZeroToOne() < 0.5 {
+				// hold randomZeroToOne method in a constant
+				let randomNum = randomZeroToOne()
+				
+				if randomNum <= 0.24 {
 					grid[x][y] = "🌲"
+				} else if (randomNum >= 0.25 && randomNum <= 0.5) {
+					grid[x][y] = "🔥"
 				}
 			}
 		}
@@ -28,6 +34,10 @@ public class ForestFireSimulation: Simulation {
 	
 	// ~~~~~~~~~~~~~~~Spawning Trees~~~~~~~~~~~~~~ //
 	public override func update() {
+		thunderboltAndLightning()
+	}
+	
+	func thunderboltAndLightning() {
 		newGrid = grid
 		
 		for x in 0..<grid.count {
@@ -54,6 +64,11 @@ public class ForestFireSimulation: Simulation {
 			}
 		}
 		grid = newGrid
+
+	}
+	
+	func aTinyForest() {
+		
 	}
 	
 	
